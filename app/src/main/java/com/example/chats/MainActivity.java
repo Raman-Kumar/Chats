@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import java.util.Arrays;
@@ -25,7 +27,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class MainActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 123;
-
+    private DocumentReference mDocRef ;
+    RecyclerView recyclerView;
 
 
     @Override
@@ -53,6 +56,18 @@ public class MainActivity extends AppCompatActivity {
                             .build(),
                     RC_SIGN_IN);
         }
+        else {
+            mDocRef = FirebaseFirestore.getInstance().collection("users").document(uid);
+        }
+
+        recyclerView = (RecyclerView) findViewById(R.id.friend_list);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        // specify an adapter (see also next example)
+        FriendAdapter mAdapter = new FriendAdapter(new String[]{"Raman", "Guddu", "Shivesh"});
+        recyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -71,6 +86,24 @@ public class MainActivity extends AppCompatActivity {
                 prefsEditor.putString("email", user.getUid());
                 prefsEditor.apply();
 
+                Map<String, Object> docData = new HashMap<>();
+                docData.put("stringExample", "Hello world!");
+                docData.put("booleanExample", true);
+                mDocRef = FirebaseFirestore.getInstance().collection("users").document(user.getUid());
+
+                        mDocRef.set(docData)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("doc", "DocumentSnapshot successfully written!");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("doc", "Error writing document", e);
+                            }
+                        });
                 // ...
             } else {
                 // Sign in failed. If response is null the user canceled the
