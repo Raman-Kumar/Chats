@@ -15,11 +15,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder> {
-    private String[] mDataset;
     Context context;
+    ArrayList<Friend> mFriendList;
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imageView;
         private final TextView textView;
@@ -44,8 +46,8 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         }
     }
 
-    public FriendAdapter(String[] myDataset, Context context) {
-        mDataset = myDataset;
+    public FriendAdapter(ArrayList<Friend> mFriendList, Context context) {
+        this.mFriendList = mFriendList;
         this.context = context;
     }
 
@@ -63,12 +65,12 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
     @SuppressLint("RestrictedApi")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int iPosition) {
-        viewHolder.textView.setText(mDataset[iPosition]);
-        Glide.with(getApplicationContext()).load("https://www.jiocinema.com/assets/img/facebook-Hover.png").into(viewHolder.imageView);
+        viewHolder.textView.setText(mFriendList.get(iPosition).getName());
+        Glide.with(context).load(mFriendList.get(iPosition).getUrl()).into(viewHolder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mFriendList.size();
     }
 }
