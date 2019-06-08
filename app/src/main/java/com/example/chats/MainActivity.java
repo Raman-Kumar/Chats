@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        FriendAdapter mAdapter = new FriendAdapter(new String[]{"Raman", "Guddu", "Shivesh"});
+        FriendAdapter mAdapter = new FriendAdapter(new String[]{"Raman", "Guddu", "Shivesh"} , this);
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -112,5 +113,10 @@ public class MainActivity extends AppCompatActivity {
                 // ...
             }
         }
+    }
+
+    public void addFriend(View view) {
+        Intent intent = new Intent(this, AddFriend.class);
+        startActivity(intent);
     }
 }
